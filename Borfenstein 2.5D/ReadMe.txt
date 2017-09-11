@@ -1,37 +1,7 @@
-========================================================================
-    CONSOLE APPLICATION : [!output PROJECT_NAME] Project Overview
-========================================================================
+This is a remake of the borfenstein engine, which will (hopefully) use significantly faster algorithms for rendering, while allowing for
+easy texture mapping in the future. The idea is that I'll replace the vector math (and particularily, the vector library eigen) with some
+faster trig math, and then precompute all the trig values and put them into a table.
 
-AppWizard has created this [!output PROJECT_NAME] application for you.
-
-This file contains a summary of what you will find in each of the files that
-make up your [!output PROJECT_NAME] application.
-
-
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
-
-    This is the main application source file.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named [!output PROJECT_NAME].pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+The whole project has been a huge pain in my arse so far to be honest. I'm not sure if this is a viable replacement or not, although it really
+does run a lot faster than the other engine. I feel like optimisations to the other engine might reduce the difference in preformance though,
+particularily if I start using faster square roots. Texture mapping is still going to be a problem with borfenstein 1.0 though.

@@ -241,7 +241,6 @@ int main(int argc, char* argv[]) {
 			int iterations = 0;
 
 			//find the horizontal wall intercept
-			
 			do {
 				if (map[HorzIntersection.x / 64][HorzIntersection.y / 64] > 0) {
 					cout << "WALL HORZ HIT at: " << HorzIntersection.x / 64 << " " << HorzIntersection.y / 64 << endl << endl;
@@ -253,6 +252,13 @@ int main(int argc, char* argv[]) {
 					HorzIntersection.x += Yb;
 					HorzIntersection.y += Ya;
 				}
+
+			} while (looping);
+
+			//find the vertical wall intercept
+			looping = true;
+			
+			do {
 
 			} while (looping);
 
