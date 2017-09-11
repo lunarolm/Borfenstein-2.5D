@@ -195,22 +195,22 @@ int main(int argc, char* argv[]) {
 			
 			//finding the nearest wallintersects
 			if (rayYDir == 1) {
-				cout << "ray is pointing up!" << endl;
+				//cout << "ray is pointing up!" << endl;
 				HorzIntersection.y = (player1.position.y / 64 * 64 -1);
 				Ya = -64;
 			}
 			else {
-				cout << "ray is pointing down!" << endl;
+				//cout << "ray is pointing down!" << endl;
 				HorzIntersection.y = player1.position.y / 64 * 64 + 64;
 				Ya = 64;
 			}
 			if (rayXDir == 1) {
-				cout << "ray is pointing right!" << endl;
+				//cout << "ray is pointing right!" << endl;
 				VertIntersection.x = (player1.position.x / 64) * 64 + 64;
 				Xb = 64;
 			}
 			else {
-				cout << "ray is pointing left!" << endl;
+				//cout << "ray is pointing left!" << endl;
 				VertIntersection.x = (player1.position.x / 64) * 64 + -1;
 				Xb = -64;
 			}
@@ -226,92 +226,74 @@ int main(int argc, char* argv[]) {
 
 			Yb = 64 / tan(rayAngle);
 			Xa = 64 * tan(rayAngle);
-
+			/*
 			cout << "iteration " << i << endl;
 			cout << "player position is: " << player1.position.x << " " << player1.position.y << endl << endl;
 			cout << "player relative position is " << relPos.x << " " << relPos.y << endl;
 			cout << "player grid location is: " << player1.position.x/64 << " " << player1.position.y/64 << endl << endl;
 			cout << "intersection is: " << VertIntersection.x << " " << VertIntersection.y << endl << endl;
 			cout << "angle is: " << rayAngle << " radians" << endl;
-			
+			*/
 
 			bool looping = true;
-			bool xySwitch = 1;
-			bool horzOrVert = NULL;
-			int iterations = 0;
+			//bool xySwitch = 1;
+			
+			//int iterations = 0;
 
 			//find the horizontal wall intercept
-			do {
-				if (map[HorzIntersection.x / 64][HorzIntersection.y / 64] > 0) {
-					cout << "WALL HORZ HIT at: " << HorzIntersection.x / 64 << " " << HorzIntersection.y / 64 << endl << endl;
-					looping = false;
-					horzOrVert = 0;
-					break;
-				}
-				else {
-					HorzIntersection.x += Yb;
-					HorzIntersection.y += Ya;
-				}
+			if (checkHorz) {
+				do {
+					if (map[HorzIntersection.x / 64][HorzIntersection.y / 64] > 0) {
+						//cout << "WALL HORZ HIT at: " << HorzIntersection.x / 64 << " " << HorzIntersection.y / 64 << endl << endl;
+						looping = false;
+						break;
+					}
+					else {
+						HorzIntersection.x += Yb;
+						HorzIntersection.y += Ya;
+					}
 
-			} while (looping);
+				} while (looping);
+			}
 
 			//find the vertical wall intercept
 			looping = true;
-			
-			do {
+			if (checkVert) {
+				do {
+					if (checkVert && map[VertIntersection.x / 64][VertIntersection.y / 64] > 0) {
+						//cout << "WALL VERT HIT at: " << VertIntersection.x / 64 << " " << VertIntersection.y / 64 << endl << endl;
+						looping = false;
+						break;
+					}
+					else {
+						VertIntersection.x += Xb;
+						VertIntersection.y += Xa;
+					}
+				} while (looping);
+			}
+			//Now, let's calculate the oblique distance to each point!
+			int horzDistance = (int)sqrt(pow((player1.position.x - HorzIntersection.x),2) + pow((player1.position.y - HorzIntersection.y), 2));
+			int vertDistance = (int)sqrt(pow((player1.position.x - VertIntersection.x), 2) + pow((player1.position.y - VertIntersection.y), 2));
 
-			} while (looping);
+			//cout << "horizontal oblique distance is: " << horzDistance << endl;
+			//cout << "vertical oblique distance is: " << vertDistance << endl;
 
-			//initial checks
-			if (map[HorzIntersection.x / 64][HorzIntersection.y / 64] > 0) {
-				cout << "WALL HORZ HIT at: " << HorzIntersection.x / 64 << " " << HorzIntersection.y / 64 << endl << endl;
-				looping = false;
+			//Which wall should we render? We render the wall with the closest oblique distance of course!
+			bool horzOrVert = NULL;
+
+			if (horzDistance <= vertDistance) {
 				horzOrVert = 0;
 			}
-			else if (checkVert && map[VertIntersection.x / 64][VertIntersection.y / 64] > 0) {
-				cout << "WALL VERT HIT at: " << VertIntersection.x / 64 << " " << VertIntersection.y / 64 << endl << endl;
-				looping = false;
+			else {
 				horzOrVert = 1;
-			}
-
-			///*I want to change this. Rather than switching between horizontal and vertical, it should simply calculate wallhits for vert and horz,*///
-			///and then calculate the oblique distance to each. Draw the closer one. This will prevent "holes" from forming in the walls
-
-			//begin wallfinding loop
-			while (looping && iterations < 100) {
-				if (xySwitch == 0 && checkVert) {
-					//cout << "added to vert" << endl;
-					VertIntersection.x += Xb;
-					VertIntersection.y += Xa;
-
-					if (map[VertIntersection.x / 64][VertIntersection.y / 64] > 0) {
-						cout << "WALL VERT HIT at: " << VertIntersection.x / 64 << " " << VertIntersection.y / 64 << endl << endl;
-						looping = false;
-						horzOrVert = 1;
-					}
-
-				}
-				else if (xySwitch == 1) {
-					//cout << "added to horz" << endl;
-					HorzIntersection.x += Yb;
-					HorzIntersection.y += Ya;
-
-					if (map[HorzIntersection.x / 64][HorzIntersection.y / 64] > 0) {
-						cout << "WALL HORZ HIT at: " << HorzIntersection.x / 64 << " " << HorzIntersection.y / 64 << endl << endl;
-						looping = false;
-						horzOrVert = 0;
-					}
-
-				}
-				xySwitch = !xySwitch;
 			}
 
 			int IncompleteWallDistance;
 			if (horzOrVert == 0) {
-				IncompleteWallDistance = sqrt(pow(player1.position.x - HorzIntersection.x, 2)+ pow(player1.position.y - HorzIntersection.y, 2));
+				IncompleteWallDistance = horzDistance;
 			}
 			else if (horzOrVert == 1) {
-				IncompleteWallDistance = sqrt(pow(player1.position.x - VertIntersection.x, 2) + pow(player1.position.y - VertIntersection.y, 2));
+				IncompleteWallDistance = vertDistance;
 			}
 
 			//getting the correct wall distance
@@ -344,6 +326,17 @@ int main(int argc, char* argv[]) {
 		SDL_RenderPresent(renderer);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+		//controls
+		const Uint8 *state = SDL_GetKeyboardState(NULL);
+		if (state[SDL_SCANCODE_A]) {
+			cout << "turning widdershins! Angle is: " << player1.angle << endl;
+			player1.angle += M_PI / 24;
+		}
+		if (state[SDL_SCANCODE_D]) {
+			cout << "turning clockwise! Angle is: " << player1.angle << endl;
+			player1.angle -= M_PI / 24;
+		}
 
 		while (SDL_PollEvent(&event)) {	//checks to see if the event queue has any more events, stops if it doesn't
 										//also, it changes the event variable to be the next event in the queue
